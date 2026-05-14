@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #0077be 0%, #001f3f 100%); /* 上が明るい青、下が深い紺 */
+    color: white;
+}
+
+#map {
+    height: 80vh;
+    border: 3px solid rgba(255, 255, 255, 0.3); /* 地図に少し透明な枠をつける */
+    border-radius: 15px; /* 角を丸くして柔らかい印象に */
+}
