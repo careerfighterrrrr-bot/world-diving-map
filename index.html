@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>石垣島ダイビングマップ</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; }
+        .info-card { font-family: sans-serif; line-height: 1.5; }
+        .safety-green { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. 地図の初期化（石垣島付近）
+        const map = L.map('map').setView([24.43, 124.15], 11);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 2. ダイビングポイントのデータ
+        const divePoints = [
+            {
+                name: "川平石崎マンタスクランブル",
+                coords: [24.460, 124.105],
+                depth: "10m - 15m",
+                life: "マンタ、ウミガメ",
+                safety: "初心者OK（流れが穏やかな時）",
+                img: "https://via.placeholder.com/150?text=Manta+Ray"
+            },
+            {
+                name: "竹富南・じゃがいもの根",
+                coords: [24.310, 124.165],
+                depth: "5m - 12m",
+                life: "ヨスジフエダイ、デバスズメダイ",
+                safety: "非常に安全",
+                img: "https://via.placeholder.com/150?text=Potato+Coral"
+            }
+        ];
+
+        // 3. ピンを地図に追加
+        divePoints.forEach(point => {
+            const popupContent = `
+                <div class="info-card">
+                    <h3>${point.name}</h3>
+                    <p><b>水深:</b> ${point.depth}</p>
+                    <p><b>生き物:</b> ${point.life}</p>
+                    <p><b>安全性:</b> <span class="safety-green">${point.safety}</span></p>
+                </div>
+            `;
+            L.marker(point.coords).addTo(map).bindPopup(popupContent);
+        });
+    </script>
+</body>
+</html>
