@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISHIGAKI DIVE MAP</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Montserrat', 'Hiragino Sans', sans-serif; background-color: #000; }
+        
+        /* タイトルバー：細身で控えめなデザイン */
+        .header-title {
+            position: absolute; top: 30px; width: 100%; text-align: center;
+            z-index: 10000; pointer-events: none;
+        }
+        .header-title h1 {
+            color: white; font-weight: 300; font-size: 1.2rem; letter-spacing: 0.5rem;
+            margin: 0; opacity: 0.8;
+        }
+
+        /* 地図のスタイルを少し暗めにする設定 */
+        #map { height: 100vh; width: 100%; background: #00121a; }
+
+        /* ポップアップを「すりガラス」風に変更 */
+        .leaflet-popup-content-wrapper {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(15px); /* 背景をぼかす */
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+        }
+        .leaflet-popup-tip { background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(15px); }
+
+        .popup-card { padding: 10px; }
+        .popup-card h2 { font-size: 1rem; margin: 0 0 10px 0; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+        .popup-card p { font-size: 0.8rem; margin: 5px 0; opacity: 0.9; line-height: 1.6; }
+        .popup-img { width: 100%; border-radius: 6px; filter: brightness(0.8); margin-top: 8px; }
+
+        /* スプラッシュ画面もより静かな印象に */
+        #splash {
+            position: fixed; inset: 0; background: #000; z-index: 11000;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 2s ease;
+        }
+        #splash img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <img src="images/background_hamajima.jpg" alt="Ishigaki">
+        <div style="position:absolute; color:white; letter-spacing:1rem; font-weight:300;">ISHIGAKI</div>
+    </div>
+
+    <div class="header-title">
+        <h1>ISHIGAKI DIVE MAP</h1>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 落ち着いたトーンの地図タイル（CartoDB Dark Matter）を使用
+        const map = L.map('map', { zoomControl: false }).setView([24.40, 124.15], 11);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+        const divePoints = [
+            {
+                name: "HAMASHIMA",
+                coords: [24.405, 124.030],
+                desc: "Depth: 0-3m / Beginner friendly. A pristine sandbar appearing at low tide.",
+                img: "images/background_hamajima.jpg"
+            }
+        ];
+
+        divePoints.forEach(p => {
+            const content = `
+                <div class="popup-card">
+                    <h2>${p.name}</h2>
+                    <p>${p.desc}</p>
+                    <img src="${p.img}" class="popup-img">
+                </div>`;
+            L.marker(p.coords).addTo(map).bindPopup(content);
+        });
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('splash').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash').style.display = 'none', 2000);
+            }, 2500);
+        };
+    </script>
+</body>
+</html>
